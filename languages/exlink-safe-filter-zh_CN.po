@@ -1,0 +1,247 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: exlink-safe-filter 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"PO-Revision-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (China)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "exlink-safe-filter Settings"
+msgstr "exlink-safe-filter 设置"
+
+msgid "General Settings"
+msgstr "基本设置"
+
+msgid "Enable exLink"
+msgstr "启用 exLink"
+
+msgid "Activate link filtering"
+msgstr "激活链接过滤"
+
+msgid "Processing Time"
+msgstr "处理时间"
+
+msgid "Process when content is displayed (recommended)"
+msgstr "内容显示时处理(推荐)"
+
+msgid "Process when content is saved"
+msgstr "内容保存时处理"
+
+msgid "Content Scope"
+msgstr "内容范围"
+
+msgid "Posts"
+msgstr "文章"
+
+msgid "Pages"
+msgstr "页面"
+
+msgid "Comments"
+msgstr "评论"
+
+msgid "Products"
+msgstr "产品"
+
+msgid "Element Scope"
+msgstr "元素范围"
+
+msgid "HTML Links (a tags)"
+msgstr "HTML链接(a标签)"
+
+msgid "Plaintext URLs"
+msgstr "纯文本URL"
+
+msgid "Email Addresses"
+msgstr "电子邮件地址"
+
+msgid "Images (img tags)"
+msgstr "图片(img标签)"
+
+msgid "Other Resources (scripts, iframes, etc)"
+msgstr "其他资源(脚本、iframe等)"
+
+msgid "Redirect Slug"
+msgstr "重定向别名"
+
+msgid "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)"
+msgstr "默认: exlink-safe-redirect (将创建 /exlink-safe-redirect/ URL)。"
+
+msgid "Audit Mode"
+msgstr "审计模式"
+
+msgid "Preserve original URL in data-original-url attribute"
+msgstr "在data-original-url属性中保留原始URL"
+
+msgid "Domain Lists"
+msgstr "域名列表"
+
+msgid "Whitelisted Domains"
+msgstr "白名单域名"
+
+msgid "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
+msgstr "每行一个域名(例如 *.example.com)。白名单链接将正常显示，不进行重定向。"
+
+msgid "Greylisted Domains"
+msgstr "灰名单域名"
+
+msgid "One domain per line. Greylisted links will use the redirect page but automatically proceed."
+msgstr "每行一个域名。灰名单链接将使用重定向页面，但会自动继续跳转。"
+
+msgid "Blacklisted Domains"
+msgstr "黑名单域名"
+
+msgid "One domain per line. Blacklisted links will be blocked with a warning message."
+msgstr "每行一个域名。黑名单链接将被阻止并显示警告消息。"
+
+msgid "Security Settings"
+msgstr "安全设置"
+
+msgid "Unknown Domain Action"
+msgstr "未知域名操作"
+
+msgid "Show redirect page for 3 seconds then proceed"
+msgstr "显示重定向页面3秒后继续"
+
+msgid "Show URL without linking (text only)"
+msgstr "显示URL但不链接(仅文本)"
+
+msgid "Show URL with HTML entities (encoded)"
+msgstr "显示带HTML实体编码的URL"
+
+msgid "Block with warning message (same as blacklist)"
+msgstr "阻止并显示警告消息(与黑名单相同)"
+
+msgid "URL Encryption"
+msgstr "URL加密"
+
+msgid "None (plain text)"
+msgstr "无(纯文本)"
+
+msgid "Base64 Encoding"
+msgstr "Base64编码"
+
+msgid "ROT13 Encoding"
+msgstr "ROT13编码"
+
+msgid "Applies to redirected URLs only"
+msgstr "仅适用于重定向URL"
+
+msgid "Warning Message"
+msgstr "警告消息"
+
+msgid "Shown for blacklisted and blocked links"
+msgstr "显示在黑名单和被阻止的链接上"
+
+msgid "Redirect Message"
+msgstr "重定向消息"
+
+msgid "Shown for unknown domain redirects"
+msgstr "显示在未知域名重定向上"
+
+msgid "Custom CSS"
+msgstr "自定义CSS"
+
+msgid "Custom Styles"
+msgstr "自定义样式"
+
+msgid "Advanced Settings"
+msgstr "高级设置"
+
+msgid "Operation Mode"
+msgstr "运行模式"
+
+msgid "Blacklist Mode"
+msgstr "黑名单模式"
+
+msgid "Only domains in blacklist will be processed through intermediate page"
+msgstr "仅黑名单中的域名会通过中间页处理"
+
+msgid "Whitelist Mode"
+msgstr "白名单模式"
+
+msgid "Only domains NOT in whitelist will be processed through intermediate page"
+msgstr "仅不在白名单中的域名会通过中间页处理"
+
+msgid "Intermediate Page Transcoding"
+msgstr "中转页转码"
+
+msgid "No Transcoding"
+msgstr "不转码"
+
+msgid "Mask Domain (e.g. ex***le.com)"
+msgstr "打码显示域名 (如 ex***le.com)"
+
+msgid "HTML Entity Encoding"
+msgstr "HTML实体编码"
+
+msgid "Replace with Custom Text"
+msgstr "替换为自定义文本"
+
+msgid "How to display domain names in intermediate page"
+msgstr "中间页域名显示方式"
+
+msgid "Custom text to replace domain name in intermediate page"
+msgstr "用于替换中转页域名的自定义文本"
+
+msgid "Domain Transcoding"
+msgstr "域名转码"
+
+msgid "How to display domain names in original page links"
+msgstr "原始页面链接域名显示方式"
+
+msgid "Custom text to replace domain name in original page"
+msgstr "用于替换原始页面域名的自定义文本"
+
+msgid "Allow Intermediate Page Indexing"
+msgstr "允许中间页被索引"
+
+msgid "Allow search engines to index intermediate pages"
+msgstr "允许搜索引擎索引中间页"
+
+msgid "Uncheck to add noindex meta tag to prevent indexing"
+msgstr "取消勾选将添加noindex元标签以阻止索引"
+
+msgid "Custom CSS for warning messages and redirect pages"
+msgstr "警告消息和重定向页面的自定义CSS"
+
+msgid "Save Changes"
+msgstr "保存更改"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "English"
+msgstr "英语"
+
+msgid "Simplified Chinese"
+msgstr "简体中文"
+
+msgid "Security Notice"
+msgstr "安全提示"
+
+msgid "You are being redirected to:"
+msgstr "您将被重定向至："
+
+msgid "Redirecting in 3 seconds..."
+msgstr "3秒后自动跳转..."
+
+msgid "Click here if not redirected"
+msgstr "如果未自动跳转，请点击此处"
+
+msgid "This link has been disabled for security reasons."
+msgstr "此链接因安全原因已被禁用。"
+
+msgid "Return to home page"
+msgstr "返回首页"
+
+msgid "Security Alert"
+msgstr "安全警报"
+
+msgid "This link has been identified as potentially harmful and has been blocked."
+msgstr "此链接被识别为潜在有害并已被阻止。"
