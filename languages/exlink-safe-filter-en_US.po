@@ -1,0 +1,166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: exlink-safe-filter 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"PO-Revision-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"Last-Translator: \n"
+"Language-Team: English (United States)\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "exlink-safe-filter Settings"
+msgstr "exlink-safe-filter Settings"
+
+msgid "General Settings"
+msgstr "General Settings"
+
+msgid "Enable exLink"
+msgstr "Enable exLink"
+
+msgid "Activate link filtering"
+msgstr "Activate link filtering"
+
+msgid "Processing Time"
+msgstr "Processing Time"
+
+msgid "Process when content is displayed (recommended)"
+msgstr "Process when content is displayed (recommended)"
+
+msgid "Process when content is saved"
+msgstr "Process when content is saved"
+
+msgid "Content Scope"
+msgstr "Content Scope"
+
+msgid "Posts"
+msgstr "Posts"
+
+msgid "Pages"
+msgstr "Pages"
+
+msgid "Comments"
+msgstr "Comments"
+
+msgid "Products"
+msgstr "Products"
+
+msgid "Element Scope"
+msgstr "Element Scope"
+
+msgid "HTML Links (a tags)"
+msgstr "HTML Links (a tags)"
+
+msgid "Plaintext URLs"
+msgstr "Plaintext URLs"
+
+msgid "Email Addresses"
+msgstr "Email Addresses"
+
+msgid "Images (img tags)"
+msgstr "Images (img tags)"
+
+msgid "Other Resources (scripts, iframes, etc)"
+msgstr "Other Resources (scripts, iframes, etc)"
+
+msgid "Redirect Slug"
+msgstr "Redirect Slug"
+
+msgid "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)"
+msgstr "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)."
+
+msgid "Audit Mode"
+msgstr "Audit Mode"
+
+msgid "Preserve original URL in data-original-url attribute"
+msgstr "Preserve original URL in data-original-url attribute"
+
+msgid "Domain Lists"
+msgstr "Domain Lists"
+
+msgid "Whitelisted Domains"
+msgstr "Whitelisted Domains"
+
+msgid "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
+msgstr "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
+
+msgid "Greylisted Domains"
+msgstr "Greylisted Domains"
+
+msgid "One domain per line. Greylisted links will use the redirect page but automatically proceed."
+msgstr "One domain per line. Greylisted links will use the redirect page but automatically proceed."
+
+msgid "Blacklisted Domains"
+msgstr "Blacklisted Domains"
+
+msgid "One domain per line. Blacklisted links will be blocked with a warning message."
+msgstr "One domain per line. Blacklisted links will be blocked with a warning message."
+
+msgid "Security Settings"
+msgstr "Security Settings"
+
+msgid "Unknown Domain Action"
+msgstr "Unknown Domain Action"
+
+msgid "Show redirect page for 3 seconds then proceed"
+msgstr "Show redirect page for 3 seconds then proceed"
+
+msgid "Show URL without linking (text only)"
+msgstr "Show URL without linking (text only)"
+
+msgid "Show URL with HTML entities (encoded)"
+msgstr "Show URL with HTML entities (encoded)"
+
+msgid "Block with warning message (same as blacklist)"
+msgstr "Block with warning message (same as blacklist)"
+
+msgid "URL Encryption"
+msgstr "URL Encryption"
+
+msgid "None (plain text)"
+msgstr "None (plain text)"
+
+msgid "Base64 Encoding"
+msgstr "Base64 Encoding"
+
+msgid "ROT13 Encoding"
+msgstr "ROT13 Encoding"
+
+msgid "Applies to redirected URLs only"
+msgstr "Applies to redirected URLs only"
+
+msgid "Warning Message"
+msgstr "Warning Message"
+
+msgid "Shown for blacklisted and blocked links"
+msgstr "Shown for blacklisted and blocked links"
+
+msgid "Redirect Message"
+msgstr "Redirect Message"
+
+msgid "Shown for unknown domain redirects"
+msgstr "Shown for unknown domain redirects"
+
+msgid "Custom CSS"
+msgstr "Custom CSS"
+
+msgid "Custom Styles"
+msgstr "Custom Styles"
+
+msgid "Custom CSS for warning messages and redirect pages"
+msgstr "Custom CSS for warning messages and redirect pages"
+
+msgid "Save Changes"
+msgstr "Save Changes"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "English"
+msgstr "English"
+
+msgid "Simplified Chinese"
+msgstr "Simplified Chinese"

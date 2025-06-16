@@ -1,0 +1,246 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: exlink-safe-filter 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"PO-Revision-Date: %Y-%m-%d %H:%M:%S+00:00\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "exlink-safe-filter Settings"
+msgstr ""
+
+msgid "General Settings"
+msgstr ""
+
+msgid "Enable exLink"
+msgstr "Enable exLink"
+
+msgid "Activate link filtering"
+msgstr ""
+
+msgid "Processing Time"
+msgstr ""
+
+msgid "Process when content is displayed (recommended)"
+msgstr ""
+
+msgid "Process when content is saved"
+msgstr ""
+
+msgid "Content Scope"
+msgstr ""
+
+msgid "Posts"
+msgstr ""
+
+msgid "Pages"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Element Scope"
+msgstr ""
+
+msgid "HTML Links (a tags)"
+msgstr ""
+
+msgid "Plaintext URLs"
+msgstr ""
+
+msgid "Email Addresses"
+msgstr ""
+
+msgid "Images (img tags)"
+msgstr ""
+
+msgid "Other Resources (scripts, iframes, etc)"
+msgstr ""
+
+msgid "Redirect Slug"
+msgstr ""
+
+msgid "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)"
+msgstr ""
+
+msgid "Audit Mode"
+msgstr ""
+
+msgid "Preserve original URL in data-original-url attribute"
+msgstr ""
+
+msgid "Domain Lists"
+msgstr ""
+
+msgid "Whitelisted Domains"
+msgstr ""
+
+msgid "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
+msgstr ""
+
+msgid "Greylisted Domains"
+msgstr ""
+
+msgid "One domain per line. Greylisted links will use the redirect page but automatically proceed."
+msgstr ""
+
+msgid "Blacklisted Domains"
+msgstr ""
+
+msgid "One domain per line. Blacklisted links will be blocked with a warning message."
+msgstr ""
+
+msgid "Security Settings"
+msgstr ""
+
+msgid "Unknown Domain Action"
+msgstr ""
+
+msgid "Show redirect page for 3 seconds then proceed"
+msgstr ""
+
+msgid "Show URL without linking (text only)"
+msgstr ""
+
+msgid "Show URL with HTML entities (encoded)"
+msgstr ""
+
+msgid "Block with warning message (same as blacklist)"
+msgstr ""
+
+msgid "URL Encryption"
+msgstr ""
+
+msgid "None (plain text)"
+msgstr ""
+
+msgid "Base64 Encoding"
+msgstr ""
+
+msgid "ROT13 Encoding"
+msgstr ""
+
+msgid "Applies to redirected URLs only"
+msgstr ""
+
+msgid "Warning Message"
+msgstr ""
+
+msgid "Shown for blacklisted and blocked links"
+msgstr ""
+
+msgid "Redirect Message"
+msgstr ""
+
+msgid "Shown for unknown domain redirects"
+msgstr ""
+
+msgid "Custom CSS"
+msgstr ""
+
+msgid "Custom Styles"
+msgstr ""
+
+msgid "Advanced Settings"
+msgstr ""
+
+msgid "Operation Mode"
+msgstr ""
+
+msgid "Blacklist Mode"
+msgstr ""
+
+msgid "Only domains in blacklist will be processed through intermediate page"
+msgstr ""
+
+msgid "Whitelist Mode"
+msgstr ""
+
+msgid "Only domains NOT in whitelist will be processed through intermediate page"
+msgstr ""
+
+msgid "Intermediate Page Transcoding"
+msgstr ""
+
+msgid "No Transcoding"
+msgstr ""
+
+msgid "Mask Domain (e.g. ex***le.com)"
+msgstr ""
+
+msgid "HTML Entity Encoding"
+msgstr ""
+
+msgid "Replace with Custom Text"
+msgstr ""
+
+msgid "How to display domain names in intermediate page"
+msgstr ""
+
+msgid "Custom text to replace domain name in intermediate page"
+msgstr ""
+
+msgid "Domain Transcoding"
+msgstr ""
+
+msgid "How to display domain names in original page links"
+msgstr ""
+
+msgid "Custom text to replace domain name in original page"
+msgstr ""
+
+msgid "Allow Intermediate Page Indexing"
+msgstr ""
+
+msgid "Allow search engines to index intermediate pages"
+msgstr ""
+
+msgid "Uncheck to add noindex meta tag to prevent indexing"
+msgstr ""
+
+msgid "Custom CSS for warning messages and redirect pages"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Simplified Chinese"
+msgstr ""
+
+msgid "Security Notice"
+msgstr ""
+
+msgid "You are being redirected to:"
+msgstr ""
+
+msgid "Redirecting in 3 seconds..."
+msgstr ""
+
+msgid "Click here if not redirected"
+msgstr ""
+
+msgid "This link has been disabled for security reasons."
+msgstr ""
+
+msgid "Return to home page"
+msgstr ""
+
+msgid "Security Alert"
+msgstr ""
+
+msgid "This link has been identified as potentially harmful and has been blocked."
+msgstr ""
