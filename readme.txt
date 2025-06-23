@@ -1,10 +1,11 @@
 === exlink-safe-filter - External Link Security ===
+Plugin Name: exlink-safe-filter
 Contributors: C1G
 Donate link: https://blog.c1gstudio.com/
-Tags: external links, security, link filtering, whitelist, blacklist, domain mask
+Tags: external links, security, link filtering, whitelist, blacklist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +81,14 @@ exlink-safe-filter是一款企业级外部链接安全管理插件，专为WordP
 在"安全设置"中，将"域名转码方式"设置为"打码"，系统会自动替换域名主体部分的中间字符为星号。
 
 == 升级日志 ==
+
+= 2.0.1 =
+* 新增恢复默认设置功能（带二次确认对话框）
+* 优化设置页面布局和提示文案
+* 优化默认安装配置
+  - 默认不启用插件
+  - 内容范围默认仅选中文章
+  - 元素范围默认仅选中HTML链接
 
 = 2.0 =
 * 新增域名打码功能，支持替换主体域名中间部分

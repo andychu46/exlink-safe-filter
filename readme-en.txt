@@ -1,10 +1,11 @@
 === exlink-safe-filter - External Link Security ===
+Plugin Name: exlink-safe-filter
 Contributors: C1G
 Donate link: https://blog.c1gstudio.com/
-Tags: external links, security, link filtering, whitelist, blacklist, domain mask
+Tags: external links, security, link filtering, whitelist, blacklist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +75,14 @@ Currently supports Chinese (Simplified) and English, which can be switched in "G
 In "Security Settings", set "Domain Transcode Method" to "Mask", and the system will automatically replace the middle characters of the main domain part with asterisks.
 
 == Changelog ==
+
+= 2.0.1 =
+* Added restore defaults feature (with confirmation dialog)
+* Improved settings page layout and prompt copy
+* Optimized default installation configurations
+  - Disabled by default
+  - Content scope defaults to posts only
+  - Element scope defaults to HTML links only
 
 = 2.0 =
 * Added domain masking feature to replace middle part of main domain

@@ -244,3 +244,9 @@ msgstr ""
 
 msgid "This link has been identified as potentially harmful and has been blocked."
 msgstr ""
+
+msgid "Restore default settings"
+msgstr ""
+
+msgid "Are you sure you want to restore all settings to their default values?"
+msgstr ""

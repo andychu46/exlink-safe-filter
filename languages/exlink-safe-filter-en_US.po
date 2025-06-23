@@ -70,7 +70,8 @@ msgid "Redirect Slug"
 msgstr "Redirect Slug"
 
 msgid "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)"
-msgstr "Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)."
+msgstr ""
+"Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)."
 
 msgid "Audit Mode"
 msgstr "Audit Mode"
@@ -84,20 +85,32 @@ msgstr "Domain Lists"
 msgid "Whitelisted Domains"
 msgstr "Whitelisted Domains"
 
-msgid "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
-msgstr "One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection."
+msgid ""
+"One domain per line (e.g. *.example.com). Whitelisted links will be "
+"displayed normally without redirection."
+msgstr ""
+"One domain per line (e.g. *.example.com). Whitelisted links will be "
+"displayed normally without redirection."
 
 msgid "Greylisted Domains"
 msgstr "Greylisted Domains"
 
-msgid "One domain per line. Greylisted links will use the redirect page but automatically proceed."
-msgstr "One domain per line. Greylisted links will use the redirect page but automatically proceed."
+msgid ""
+"One domain per line. Greylisted links will use the redirect page but "
+"automatically proceed."
+msgstr ""
+"One domain per line. Greylisted links will use the redirect page but "
+"automatically proceed."
 
 msgid "Blacklisted Domains"
 msgstr "Blacklisted Domains"
 
-msgid "One domain per line. Blacklisted links will be blocked with a warning message."
-msgstr "One domain per line. Blacklisted links will be blocked with a warning message."
+msgid ""
+"One domain per line. Blacklisted links will be blocked with a warning "
+"message."
+msgstr ""
+"One domain per line. Blacklisted links will be blocked with a warning "
+"message."
 
 msgid "Security Settings"
 msgstr "Security Settings"
@@ -150,6 +163,70 @@ msgstr "Custom CSS"
 msgid "Custom Styles"
 msgstr "Custom Styles"
 
+#, fuzzy
+msgid "Advanced Settings"
+msgstr "General Settings"
+
+msgid "Operation Mode"
+msgstr ""
+
+#, fuzzy
+msgid "Blacklist Mode"
+msgstr "Blacklisted Domains"
+
+#, fuzzy
+msgid "Only domains in blacklist will be processed through intermediate page"
+msgstr ""
+"One domain per line. Blacklisted links will be blocked with a warning "
+"message."
+
+#, fuzzy
+msgid "Whitelist Mode"
+msgstr "Whitelisted Domains"
+
+msgid ""
+"Only domains NOT in whitelist will be processed through intermediate page"
+msgstr ""
+
+msgid "Intermediate Page Transcoding"
+msgstr ""
+
+msgid "No Transcoding"
+msgstr ""
+
+msgid "Mask Domain (e.g. ex***le.com)"
+msgstr ""
+
+msgid "HTML Entity Encoding"
+msgstr ""
+
+msgid "Replace with Custom Text"
+msgstr ""
+
+msgid "How to display domain names in intermediate page"
+msgstr ""
+
+msgid "Custom text to replace domain name in intermediate page"
+msgstr ""
+
+msgid "Domain Transcoding"
+msgstr ""
+
+msgid "How to display domain names in original page links"
+msgstr ""
+
+msgid "Custom text to replace domain name in original page"
+msgstr ""
+
+msgid "Allow Intermediate Page Indexing"
+msgstr ""
+
+msgid "Allow search engines to index intermediate pages"
+msgstr ""
+
+msgid "Uncheck to add noindex meta tag to prevent indexing"
+msgstr ""
+
 msgid "Custom CSS for warning messages and redirect pages"
 msgstr "Custom CSS for warning messages and redirect pages"
 
@@ -164,3 +241,37 @@ msgstr "English"
 
 msgid "Simplified Chinese"
 msgstr "Simplified Chinese"
+
+#, fuzzy
+msgid "Security Notice"
+msgstr "Security Settings"
+
+msgid "You are being redirected to:"
+msgstr ""
+
+msgid "Redirecting in 3 seconds..."
+msgstr ""
+
+msgid "Click here if not redirected"
+msgstr ""
+
+msgid "This link has been disabled for security reasons."
+msgstr ""
+
+msgid "Return to home page"
+msgstr ""
+
+#, fuzzy
+msgid "Security Alert"
+msgstr "Security Settings"
+
+msgid ""
+"This link has been identified as potentially harmful and has been blocked."
+msgstr ""
+
+#, fuzzy
+msgid "Restore default settings"
+msgstr "General Settings"
+
+msgid "Are you sure you want to restore all settings to their default values?"
+msgstr ""
