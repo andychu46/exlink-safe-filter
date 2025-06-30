@@ -3,11 +3,14 @@
 Plugin Name: exlink-safe-filter - External Link Security
 Plugin URI: https://github.com/andychu46/exlink-safe-filter
 Description: Advanced external link filtering with whitelist, greylist, blacklist and multiple security options.
-Version: 2.0
+Version: 2.0.4
+Requires at least: 5.0
+Tested up to: 6.8
+Requires PHP:   7.2
 Author: C1G
 Author URI:  https://blog.c1gstudio.com
-Company: C1gStudio.com
 License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Text Domain: exlink-safe-filter
 */
 
@@ -18,15 +21,15 @@ class ExLinkFilter {
 
     private $default_settings = [
         'language' => 'en_US', // Default language: en_US or zh_CN
-        'enabled' => 1,
+        'enabled' => 0, // 默认不启用
         'processing_time' => 'display',
-        'scope_content' => ['post', 'page', 'comment', 'product'],
-        'scope_elements' => ['html_links', 'plaintext', 'emails', 'images', 'other'],
+        'scope_content' => ['post'], // 默认仅选中文章
+        'scope_elements' => ['html_links'], // 默认仅选中HTML链接
         'redirect_slug' => 'exlink-safe-redirect',
         'whitelist' => '',
         'greylist' => '',
         'blacklist' => '',
-        'audit_mode' => 1,
+        'audit_mode' => 0,
         'unknown_action' => 'redirect_3s',
         'unknown_message' => 'You are being redirected to an external site...',
         'warning_message' => 'This link has been blocked for security reasons',
@@ -137,7 +140,7 @@ class ExLinkFilter {
     // 停用插件
     public function deactivate() {
         flush_rewrite_rules();
-        remove_action('wp_head', [$this, 'output_custom_css']);
+        
     }
 
     // 添加重写规则
@@ -156,6 +159,10 @@ class ExLinkFilter {
 
     // 设置页面清理
     public function sanitize_settings($input) {
+        // 处理恢复默认设置
+        if (!empty($_POST['reset_defaults'])) {
+            return $this->default_settings;
+        }
         $output = [];
         
         // 处理复选框数组
@@ -209,17 +216,10 @@ class ExLinkFilter {
     private function add_custom_css($css) {
         if (!empty($css)) {
             update_option('exlink_custom_css', wp_strip_all_tags($css));
-            add_action('wp_head', [$this, 'output_custom_css']);
         }
     }
 
-    // 输出自定义CSS
-    public function output_custom_css() {
-        $css = get_option('exlink_custom_css', '');
-        if (!empty($css)) {
-            echo '<style type="text/css">' . $css . '</style>';
-        }
-    }
+
 
     // 创建设置菜单
     public function create_admin_menu() {
@@ -249,66 +249,66 @@ class ExLinkFilter {
         $settings = $this->get_settings();
         ?>
         <div class="wrap">
-            <h1><?php _e('exlink-safe-filter - External Link Security Settings', 'exlink-safe-filter'); ?></h1>
+            <h1><?php esc_html_e('exlink-safe-filter - External Link Security Settings', 'exlink-safe-filter'); ?></h1>
         
         <form method="post" action="options.php">
                 <?php settings_fields('exlink_settings_group'); ?>
                 <?php do_settings_sections('exlink_settings_group'); ?>
                 
-                <h2 class="title"><?php _e('General Settings', 'exlink-safe-filter'); ?></h2>
+                <h2 class="title"><?php esc_html_e('General Settings', 'exlink-safe-filter'); ?></h2>
                 <table class="form-table">
                     <tr>
-            <th scope="row"><?php _e('Language', 'exlink-safe-filter'); ?></th>
+            <th scope="row"><?php esc_html_e('Language', 'exlink-safe-filter'); ?></th>
             <td>
                 <select name="exlink_settings[language]">
-                    <option value="en_US" <?php selected($settings['language'], 'en_US'); ?>><?php _e('English', 'exlink-safe-filter'); ?></option>
-                    <option value="zh_CN" <?php selected($settings['language'], 'zh_CN'); ?>><?php _e('Chinese (Simplified)', 'exlink-safe-filter'); ?></option>
+                    <option value="en_US" <?php selected($settings['language'], 'en_US'); ?>><?php esc_html_e('English', 'exlink-safe-filter'); ?></option>
+                    <option value="zh_CN" <?php selected($settings['language'], 'zh_CN'); ?>><?php esc_html_e('Chinese (Simplified)', 'exlink-safe-filter'); ?></option>
                 </select>
             </td>
         </tr>
         <tr>
-            <th scope="row"><?php _e('Enable exLink', 'exlink-safe-filter'); ?></th>
+            <th scope="row"><?php esc_html_e('Enable exLink', 'exlink-safe-filter'); ?></th>
             <td>
                 <label>
                     <input type="checkbox" name="exlink_settings[enabled]" value="1" <?php checked($settings['enabled'], 1); ?>>
-                    <?php _e('Activate link filtering', 'exlink-safe-filter'); ?>
+                    <?php esc_html_e('Activate link filtering', 'exlink-safe-filter'); ?>
                 </label>
             </td>
         </tr>
                     
         <tr>
-            <th scope="row"><?php _e('Processing Time', 'exlink-safe-filter'); ?></th>
+            <th scope="row"><?php esc_html_e('Processing Time', 'exlink-safe-filter'); ?></th>
             <td>
                 <label>
                     <input type="radio" name="exlink_settings[processing_time]" value="display" <?php checked($settings['processing_time'], 'display'); ?>>
-                    <?php _e('Process when content is displayed (recommended)', 'exlink-safe-filter'); ?>
+                    <?php esc_html_e('Process when content is displayed (recommended)', 'exlink-safe-filter'); ?>
                 </label>
                 <!--
                 <br>
                 <label>
                     <input type="radio" name="exlink_settings[processing_time]" value="save" <?php checked($settings['processing_time'], 'save'); ?>>
-                    <?php _e('Process when content is saved', 'exlink-safe-filter'); ?>
+                    <?php esc_html_e('Process when content is saved', 'exlink-safe-filter'); ?>
                 </label>
                 -->
             </td>
         </tr>
 
-                        <th scope="row"><?php _e('Operation Mode', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Operation Mode', 'exlink-safe-filter'); ?></th>
                         <td>
                             <label>
                                 <input type="radio" name="exlink_settings[operation_mode]" value="blacklist" <?php checked($settings['operation_mode'], 'blacklist'); ?>>
-                                <?php _e('Blacklist Mode', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Blacklist Mode', 'exlink-safe-filter'); ?>
                             </label><br>
-                            <p class="description"><?php _e('Only domains in blacklist will be processed through intermediate page', 'exlink-safe-filter'); ?></p><br>
+                            <p class="description"><?php esc_html_e('Only domains in blacklist will be processed through intermediate page', 'exlink-safe-filter'); ?></p><br>
                             <label>
                                 <input type="radio" name="exlink_settings[operation_mode]" value="whitelist" <?php checked($settings['operation_mode'], 'whitelist'); ?>>
-                                <?php _e('Whitelist Mode', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Whitelist Mode', 'exlink-safe-filter'); ?>
                             </label><br>
-                            <p class="description"><?php _e('Only domains NOT in whitelist will be processed through intermediate page', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Only domains NOT in whitelist will be processed through intermediate page', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>                   
                     <tr>
-                        <th scope="row"><?php _e('Content Scope', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Content Scope', 'exlink-safe-filter'); ?></th>
                         <td>
                             <?php $scopes = [
                                 'post' => __('Posts', 'exlink-safe-filter'), 
@@ -318,15 +318,15 @@ class ExLinkFilter {
                             ]; ?>
                             <?php foreach ($scopes as $key => $label): ?>
                                 <label>
-                                    <input type="checkbox" name="exlink_settings[scope_content][]" value="<?php echo $key; ?>" <?php checked(in_array($key, $settings['scope_content'])); ?>>
-                                    <?php echo $label; ?>
+                                    <input type="checkbox" name="exlink_settings[scope_content][]" value="<?php echo esc_html($key); ?>" <?php checked(in_array($key, $settings['scope_content'])); ?>>
+                                    <?php echo esc_html($label); ?>
                                 </label><br>
                             <?php endforeach; ?>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Element Scope', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Element Scope', 'exlink-safe-filter'); ?></th>
                         <td>
                             <?php $elements = [
                                 'html_links' => __('HTML Links (a tags)', 'exlink-safe-filter'), 
@@ -337,188 +337,193 @@ class ExLinkFilter {
                             ]; ?>
                             <?php foreach ($elements as $key => $label): ?>
                                 <label>
-                                    <input type="checkbox" name="exlink_settings[scope_elements][]" value="<?php echo $key; ?>" <?php checked(in_array($key, $settings['scope_elements'])); ?>>
-                                    <?php echo $label; ?>
+                                    <input type="checkbox" name="exlink_settings[scope_elements][]" value="<?php echo esc_html($key); ?>" <?php checked(in_array($key, $settings['scope_elements'])); ?>>
+                                    <?php echo esc_html($label); ?>
                                 </label><br>
                             <?php endforeach; ?>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Redirect Slug', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Redirect Slug', 'exlink-safe-filter'); ?></th>
                         <td>
                             <input type="text" name="exlink_settings[redirect_slug]" value="<?php echo esc_attr($settings['redirect_slug']); ?>" class="regular-text">
-                            <p class="description"><?php _e('Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Default: exlink-safe-redirect (will create /exlink-safe-redirect/ URL)', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Domain Transcoding', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Domain Transcoding', 'exlink-safe-filter'); ?></th>
                         <td>
                             <select name="exlink_settings[domain_transcode]" id="domain_transcode">
-                                <option value="none" <?php selected($settings['domain_transcode'], 'none'); ?>><?php _e('No Transcoding', 'exlink-safe-filter'); ?></option>
-                                <option value="mask" <?php selected($settings['domain_transcode'], 'mask'); ?>><?php _e('Mask Domain (e.g. ex***le.com)', 'exlink-safe-filter'); ?></option>
-                                <option value="entity" <?php selected($settings['domain_transcode'], 'entity'); ?>><?php _e('HTML Entity Encoding', 'exlink-safe-filter'); ?></option>
-                                <option value="custom" <?php selected($settings['domain_transcode'], 'custom'); ?>><?php _e('Replace with Custom Text', 'exlink-safe-filter'); ?></option>
+                                <option value="none" <?php selected($settings['domain_transcode'], 'none'); ?>><?php esc_html_e('No Transcoding', 'exlink-safe-filter'); ?></option>
+                                <option value="mask" <?php selected($settings['domain_transcode'], 'mask'); ?>><?php esc_html_e('Mask Domain (e.g. ex***le.com)', 'exlink-safe-filter'); ?></option>
+                                <option value="entity" <?php selected($settings['domain_transcode'], 'entity'); ?>><?php esc_html_e('HTML Entity Encoding', 'exlink-safe-filter'); ?></option>
+                                <option value="custom" <?php selected($settings['domain_transcode'], 'custom'); ?>><?php esc_html_e('Replace with Custom Text', 'exlink-safe-filter'); ?></option>
                             </select>
-                            <p class="description"><?php _e('How to display domain names in original page links', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('How to display domain names in original page links', 'exlink-safe-filter'); ?></p>
                             <div id="domain_transcode_text" style="margin-top:10px; display:<?php echo $settings['domain_transcode'] === 'custom' ? 'block' : 'none'; ?>">
                                 <input type="text" name="exlink_settings[domain_transcode_custom_text]" value="<?php echo esc_attr($settings['domain_transcode_custom_text']); ?>" class="regular-text">
-                                <p class="description"><?php _e('Custom text to replace domain name in original page', 'exlink-safe-filter'); ?></p>
+                                <p class="description"><?php esc_html_e('Custom text to replace domain name in original page', 'exlink-safe-filter'); ?></p>
                             </div>
                         </td>
                     </tr>                   
                     <tr>
-                        <th scope="row"><?php _e('Audit Mode', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Audit Mode', 'exlink-safe-filter'); ?></th>
                         <td>
                             <label>
                                 <input type="checkbox" name="exlink_settings[audit_mode]" value="1" <?php checked($settings['audit_mode'], 1); ?>>
-                                <?php _e('Preserve original URL in data-original-url attribute', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Preserve original URL in data-original-url attribute', 'exlink-safe-filter'); ?>
                             </label>
                         </td>
                     </tr>
                 </table>
                 
-                <h2 class="title"><?php _e('Domain Lists', 'exlink-safe-filter'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Domain Lists', 'exlink-safe-filter'); ?></h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php _e('Whitelisted Domains', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Whitelisted Domains', 'exlink-safe-filter'); ?></th>
                         <td>
                             <textarea name="exlink_settings[whitelist]" rows="5" cols="50" class="large-text"><?php echo esc_textarea($settings['whitelist']); ?></textarea>
-                            <p class="description"><?php _e('One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection.', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('One domain per line (e.g. *.example.com). Whitelisted links will be displayed normally without redirection.', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Greylisted Domains', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Greylisted Domains', 'exlink-safe-filter'); ?></th>
                         <td>
                             <textarea name="exlink_settings[greylist]" rows="5" cols="50" class="large-text"><?php echo esc_textarea($settings['greylist']); ?></textarea>
-                            <p class="description"><?php _e('One domain per line. Greylisted links will use the redirect page but automatically proceed.', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('One domain per line. Greylisted links will use the redirect page but automatically proceed.', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Blacklisted Domains', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Blacklisted Domains', 'exlink-safe-filter'); ?></th>
                         <td>
                             <textarea name="exlink_settings[blacklist]" rows="5" cols="50" class="large-text"><?php echo esc_textarea($settings['blacklist']); ?></textarea>
-                            <p class="description"><?php _e('One domain per line. Blacklisted links will be blocked with a warning message.', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('One domain per line. Blacklisted links will be blocked with a warning message.', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                 </table>
                 
-                <h2 class="title"><?php _e('Security Settings', 'exlink-safe-filter'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Security Settings', 'exlink-safe-filter'); ?></h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php _e('Unknown Domain Action', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Unknown Domain Action', 'exlink-safe-filter'); ?></th>
                         <td>
                             <label>
                                 <input type="radio" name="exlink_settings[unknown_action]" value="redirect_3s" <?php checked($settings['unknown_action'], 'redirect_3s'); ?>>
-                                <?php _e('Show redirect page for 3 seconds then proceed', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Show redirect page for 3 seconds then proceed', 'exlink-safe-filter'); ?>
                             </label><br>
                             
                             <label>
                                 <input type="radio" name="exlink_settings[unknown_action]" value="show_url" <?php checked($settings['unknown_action'], 'show_url'); ?>>
-                                <?php _e('Show URL without linking (text only)', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Show URL without linking (text only)', 'exlink-safe-filter'); ?>
                             </label><br>
                             
                             <label>
                                 <input type="radio" name="exlink_settings[unknown_action]" value="show_encoded" <?php checked($settings['unknown_action'], 'show_encoded'); ?>>
-                                <?php _e('Show URL with HTML entities (encoded)', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Show URL with HTML entities (encoded)', 'exlink-safe-filter'); ?>
                             </label><br>
                             
                             <label>
                                 <input type="radio" name="exlink_settings[unknown_action]" value="block" <?php checked($settings['unknown_action'], 'block'); ?>>
-                                <?php _e('Block with warning message (same as blacklist)', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Block with warning message (same as blacklist)', 'exlink-safe-filter'); ?>
                             </label>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('URL Encryption', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('URL Encryption', 'exlink-safe-filter'); ?></th>
                         <td>
                             <select name="exlink_settings[encryption]">
-                                <option value="none" <?php selected($settings['encryption'], 'none'); ?>><?php _e('None (plain text)', 'exlink-safe-filter'); ?></option>
-                                <option value="base64" <?php selected($settings['encryption'], 'base64'); ?>><?php _e('Base64 Encoding', 'exlink-safe-filter'); ?></option>
-                                <option value="rot13" <?php selected($settings['encryption'], 'rot13'); ?>><?php _e('ROT13 Encoding', 'exlink-safe-filter'); ?></option>
+                                <option value="none" <?php selected($settings['encryption'], 'none'); ?>><?php esc_html_e('None (plain text)', 'exlink-safe-filter'); ?></option>
+                                <option value="base64" <?php selected($settings['encryption'], 'base64'); ?>><?php esc_html_e('Base64 Encoding', 'exlink-safe-filter'); ?></option>
                             </select>
-                            <p class="description"><?php _e('Applies to redirected URLs only', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Applies to redirected URLs only', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Warning Message', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Warning Message', 'exlink-safe-filter'); ?></th>
                         <td>
                             <input type="text" name="exlink_settings[warning_message]" value="<?php echo esc_attr($settings['warning_message']); ?>" class="regular-text">
-                            <p class="description"><?php _e('Shown for blacklisted and blocked links', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Shown for blacklisted and blocked links', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th scope="row"><?php _e('Redirect Message', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Redirect Message', 'exlink-safe-filter'); ?></th>
                         <td>
                             <input type="text" name="exlink_settings[unknown_message]" value="<?php echo esc_attr($settings['unknown_message']); ?>" class="regular-text">
-                            <p class="description"><?php _e('Shown for unknown domain redirects', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Shown for unknown domain redirects', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                 </table>
                 
-                <h2 class="title"><?php _e('Advanced Settings', 'exlink-safe-filter'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Advanced Settings', 'exlink-safe-filter'); ?></h2>
                 <table class="form-table">
   
                     <tr>
-                        <th scope="row"><?php _e('Intermediate Page Transcoding', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Intermediate Page Transcoding', 'exlink-safe-filter'); ?></th>
                         <td>
                             <select name="exlink_settings[intermediate_page_transcode]" id="intermediate_page_transcode">
-                                <option value="none" <?php selected($settings['intermediate_page_transcode'], 'none'); ?>><?php _e('No Transcoding', 'exlink-safe-filter'); ?></option>
-                                <option value="mask" <?php selected($settings['intermediate_page_transcode'], 'mask'); ?>><?php _e('Mask Domain (e.g. ex***le.com)', 'exlink-safe-filter'); ?></option>
-                                <option value="entity" <?php selected($settings['intermediate_page_transcode'], 'entity'); ?>><?php _e('HTML Entity Encoding', 'exlink-safe-filter'); ?></option>
-                                <option value="custom" <?php selected($settings['intermediate_page_transcode'], 'custom'); ?>><?php _e('Replace with Custom Text', 'exlink-safe-filter'); ?></option>
+                                <option value="none" <?php selected($settings['intermediate_page_transcode'], 'none'); ?>><?php esc_html_e('No Transcoding', 'exlink-safe-filter'); ?></option>
+                                <option value="mask" <?php selected($settings['intermediate_page_transcode'], 'mask'); ?>><?php esc_html_e('Mask Domain (e.g. ex***le.com)', 'exlink-safe-filter'); ?></option>
+                                <option value="entity" <?php selected($settings['intermediate_page_transcode'], 'entity'); ?>><?php esc_html_e('HTML Entity Encoding', 'exlink-safe-filter'); ?></option>
+                                <option value="custom" <?php selected($settings['intermediate_page_transcode'], 'custom'); ?>><?php esc_html_e('Replace with Custom Text', 'exlink-safe-filter'); ?></option>
                             </select>
-                            <p class="description"><?php _e('How to display domain names in intermediate page', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('How to display domain names in intermediate page', 'exlink-safe-filter'); ?></p>
                             <div id="intermediate_transcode_text" style="margin-top:10px; display:<?php echo $settings['intermediate_page_transcode'] === 'custom' ? 'block' : 'none'; ?>">
                                 <input type="text" name="exlink_settings[intermediate_transcode_custom_text]" value="<?php echo esc_attr($settings['intermediate_transcode_custom_text']); ?>" class="regular-text">
-                                <p class="description"><?php _e('Custom text to replace domain name in intermediate page', 'exlink-safe-filter'); ?></p>
+                                <p class="description"><?php esc_html_e('Custom text to replace domain name in intermediate page', 'exlink-safe-filter'); ?></p>
                             </div>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e('Allow Intermediate Page Indexing', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Allow Intermediate Page Indexing', 'exlink-safe-filter'); ?></th>
                         <td>
                             <label>
                                 <input type="checkbox" name="exlink_settings[allow_index]" value="1" <?php checked($settings['allow_index'], 1); ?>>
-                                <?php _e('Allow search engines to index intermediate pages', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Allow search engines to index intermediate pages', 'exlink-safe-filter'); ?>
                             </label>
-                            <p class="description"><?php _e('Uncheck to add noindex meta tag to prevent indexing', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Uncheck to add noindex meta tag to prevent indexing', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Show Plugin Footer', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Show Plugin Footer', 'exlink-safe-filter'); ?></th>
                         <td>
                             <label>
                                 <input type="checkbox" name="exlink_settings[show_footer]" value="1" <?php checked($settings['show_footer'], 1); ?>>
-                                <?php _e('Display plugin information in intermediate page footer', 'exlink-safe-filter'); ?>
+                                <?php esc_html_e('Display plugin information in intermediate page footer', 'exlink-safe-filter'); ?>
                             </label>
                         </td>
                     </tr>
 
                 </table>
 
-                <h2 class="title"><?php _e('Custom CSS', 'exlink-safe-filter'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Custom CSS', 'exlink-safe-filter'); ?></h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php _e('Custom Styles', 'exlink-safe-filter'); ?></th>
+                        <th scope="row"><?php esc_html_e('Custom Styles', 'exlink-safe-filter'); ?></th>
                         <td>
                             <textarea name="exlink_settings[custom_css]" rows="5" cols="50" class="large-text code"><?php echo esc_textarea($settings['custom_css']); ?></textarea>
-                            <p class="description"><?php _e('Custom CSS for warning messages and redirect pages', 'exlink-safe-filter'); ?></p>
+                            <p class="description"><?php esc_html_e('Custom CSS for warning messages and redirect pages', 'exlink-safe-filter'); ?></p>
                         </td>
                     </tr>
                 </table>
-                
-                <?php submit_button(__('Save Changes', 'exlink-safe-filter')); ?>
-            </form>
+
+            <p class="submit">
+    <input type="submit" name="reset_defaults" class="button button-secondary" value="<?php esc_html_e('Restore default settings', 'exlink-safe-filter'); ?>" onclick="return confirm('<?php esc_html_e('Are you sure you want to restore all settings to their default values?', 'exlink-safe-filter'); ?>')">
+    <input type="submit" name="submit" class="button button-primary" value="<?php esc_html_e('Save Changes', 'exlink-safe-filter'); ?>">
+</p>
+</form>
         </div>
-        <script type="text/javascript">
-        jQuery(document).ready(function($) {
+<?php         
+        wp_register_script( 'exlink-admin-js', '', array("jquery"), '1.0', true );
+        wp_enqueue_script( 'exlink-admin-js' );
+        wp_add_inline_script( 'exlink-admin-js',"
+      jQuery(document).ready(function($) {
             // 中转页转码自定义文本控制
             $('#intermediate_page_transcode').change(function() {
                 if ($(this).val() === 'custom') {
@@ -537,9 +542,14 @@ class ExLinkFilter {
                 }
             });
         });
-        </script>
+        "); 
+?>
+        
+
         <?php
     }
+
+
 
     // 获取设置
     private function get_settings() {
@@ -731,9 +741,6 @@ class ExLinkFilter {
             case 'base64':
                 $encoded = rtrim(strtr(base64_encode($url), '+/', '-_'), '=');
                 break;
-            case 'rot13':
-                $encoded = str_rot13($url);
-                break;
             default:
                 $encoded = urlencode($url);
         }
@@ -749,7 +756,7 @@ class ExLinkFilter {
         if (!get_query_var('exlink_redirect')) return;
         
         $settings = $this->get_settings();
-        $url_param = isset($_GET['url']) ? sanitize_text_field($_GET['url']) : '';
+        $url_param = isset($_GET['url']) ? sanitize_text_field(wp_unslash($_GET['url'])) : '';
         $original_url = '';
         
         // 解码URL
@@ -757,9 +764,6 @@ class ExLinkFilter {
             switch ($settings['encryption']) {
                 case 'base64':
                     $original_url = base64_decode(str_pad(strtr($url_param, '-_', '+/'), strlen($url_param) % 4, '=', STR_PAD_RIGHT));
-                    break;
-                case 'rot13':
-                    $original_url = str_rot13($url_param);
                     break;
                 default:
                     $original_url = urldecode($url_param);
@@ -803,7 +807,7 @@ class ExLinkFilter {
         }
         
         // 默认重定向（灰名单情况）
-        wp_redirect(esc_url_raw($original_url));
+        wp_safe_redirect(esc_url_raw($original_url));
         exit;
     }
 
@@ -811,11 +815,11 @@ class ExLinkFilter {
     private function show_redirect_page($url, $message) {
         // 验证签名（固定签名机制）
         // 使用请求中的原始编码URL进行签名验证，确保与生成时一致
-        $encoded_url = isset($_GET['url']) ? sanitize_text_field($_GET['url']) : '';
+        $encoded_url = isset($_GET['url']) ? sanitize_text_field(wp_unslash($_GET['url'])) : '';
         $salt = wp_salt('exlink_safe_filter');
         $expected_signature = hash_hmac('sha256', $encoded_url, $salt);
-        if (empty($_GET['sig']) || !hash_equals($expected_signature, $_GET['sig'])) {
-            wp_die(__('链接验证失败，可能已被篡改。', 'exlink-safe-filter'));
+        if (empty(wp_unslash($_GET['sig'])) || !hash_equals($expected_signature, wp_unslash($_GET['sig']))) {
+            wp_die(esc_html_e('链接验证失败，可能已被篡改。', 'exlink-safe-filter'));
         }
         
         $settings = $this->get_settings();
@@ -840,20 +844,20 @@ a:hover{text-decoration:underline;}
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong{color:#292b2c;}
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
             <div class="exlink-redirect-container">
-                <h2><?php _e('Security Notice', 'exlink-safe-filter'); ?></h2>
+                <h2><?php esc_html_e('Security Notice', 'exlink-safe-filter'); ?></h2>
                 <p><?php echo esc_html($message); ?></p>
-                <p><?php _e('You are being redirected to:', 'exlink-safe-filter'); ?> <strong><?php echo esc_html($this->mask_url($url)); ?></strong></p>
-                <p><?php _e('Redirecting in 3 seconds...', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo esc_url($url); ?>"><?php _e('Click here if not redirected', 'exlink-safe-filter'); ?></a></p>
+                <p><?php esc_html_e('You are being redirected to:', 'exlink-safe-filter'); ?> <strong><?php echo esc_html($this->mask_url($url)); ?></strong></p>
+                <p><?php esc_html_e('Redirecting in 3 seconds...', 'exlink-safe-filter'); ?></p>
+                <p><a href="<?php echo esc_url($url); ?>"><?php esc_html_e('Click here if not redirected', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
-                <p><?php _e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php _e('Author', 'exlink-safe-filter'); ?></a></p>
+                <p><?php esc_html_e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php esc_html_e('Author', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php endif; ?>
         </body>
@@ -878,20 +882,20 @@ a:hover{text-decoration:underline;}
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong{color:#292b2c;}
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
             <div class="exlink-redirect-container">
-                <h2><?php _e('Security Notice', 'exlink-safe-filter'); ?></h2>
+                <h2><?php esc_html_e('Security Notice', 'exlink-safe-filter'); ?></h2>
                 <p><?php echo esc_html($message); ?></p>
                 <p>Requested URL: <strong><?php echo esc_html($url); ?></strong></p>
-                <p><?php _e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php _e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p><?php esc_html_e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
-                  <p><?php _e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php _e('Author', 'exlink-safe-filter'); ?></a></p>
+                  <p><?php esc_html_e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php esc_html_e('Author', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php endif; ?>            
         </body>
@@ -905,32 +909,31 @@ strong{color:#292b2c;}
         $settings = $this->get_settings();
         $encoded_url = esc_html($this->transcode_intermediate_domain($url));
         ?>
-            <title>Security Notice</title>
+            <title>Security Notice3</title>
             <style>
 /* Default styles */
-.exlink-redirect-container,.exlink-blocked-container{max-width:600px;margin:50px auto;padding:30px;font-family:'Segoe UI',Arial,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.1);border-radius:12px;background-color:#ffffff;}
-h2{color:#d9534f;margin-top:0;border-bottom:2px solid #f5f5f5;padding-bottom:10px;}
-p{line-height:1.6;color:#333333;}
-a{color:#0275d8;text-decoration:none;font-weight:500;}
-a:hover{text-decoration:underline;}
-.exlink-warning{padding:15px;background-color:#f8d7da;color:#721c24;border-radius:6px;margin-bottom:20px;}
-.exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
-strong{color:#292b2c;}
+.exlink-redirect-container, .exlink-blocked-container { max-width: 600px; margin: 50px auto; padding: 30px; font-family: 'Segoe UI', Arial, sans-serif; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; background-color: #ffffff; }
+h2 { color: #d9534f; margin-top: 0; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
+p { line-height: 1.6; color: #333333; }
+a { color: #0275d8; text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; } 
+.exlink-warning { padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 6px; margin-bottom: 20px; }
+.exlink-footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 0.9em; color: #666; }
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
             <div class="exlink-redirect-container">
-                <h2><?php _e('Security Notice', 'exlink-safe-filter'); ?></h2>
+                <h2><?php esc_html_e('Security Notice', 'exlink-safe-filter'); ?></h2>
                 <p><?php echo esc_html($message); ?></p>
-                <p>Requested URL: <code><?php echo $encoded_url; ?></code></p>
-                <p><?php _e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php _e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p>Requested URL: <code><?php echo esc_url($encoded_url); ?></code></p>
+                <p><?php esc_html_e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
-                  <p><?php _e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php _e('Author', 'exlink-safe-filter'); ?></a></p>
+                  <p><?php esc_html_e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php esc_html_e('Author', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php endif; ?>               
         </body>
@@ -955,19 +958,19 @@ a:hover { text-decoration: underline; }
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong { color: #292b2c; }
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
             <div class="exlink-blocked-container">
-                <h2><?php _e('Security Alert', 'exlink-safe-filter'); ?></h2>
+                <h2><?php esc_html_e('Security Alert', 'exlink-safe-filter'); ?></h2>
                 <div class="exlink-warning"><?php echo esc_html($message); ?></div>
-                <p><?php _e('This link has been identified as potentially harmful and has been blocked.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php _e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p><?php esc_html_e('This link has been identified as potentially harmful and has been blocked.', 'exlink-safe-filter'); ?></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
-                  <p><?php _e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php _e('Author', 'exlink-safe-filter'); ?></a></p>
+                  <p><?php esc_html_e('Powered by ExLink Safe Filter', 'exlink-safe-filter'); ?> | <a href="https://blog.c1gstudio.com" target="_blank"><?php esc_html_e('Author', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php endif; ?>                 
         </body>
@@ -977,7 +980,7 @@ strong { color: #292b2c; }
     }
 
     private function convertToHtmlEntities($url) {
-        $parsed = parse_url($url);
+        $parsed = wp_parse_url($url);
         if (empty($parsed['host'])) {
             return $url;
         }
@@ -1032,7 +1035,7 @@ strong { color: #292b2c; }
     }
 
     private function get_domain_from_url($url) {
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = wp_parse_url ($url, PHP_URL_HOST);
         return $host ? $host : '';
     }
 
@@ -1185,7 +1188,7 @@ strong { color: #292b2c; }
      * @return string 域名掩码处理后的完整URL
      */
     private function mask_url($url) {
-        $parsed = parse_url($url);
+        $parsed = wp_parse_url($url);
         if (empty($parsed['host'])) {
             return $url;
         }

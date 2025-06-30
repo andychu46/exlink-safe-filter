@@ -245,3 +245,9 @@ msgstr "安全警报"
 
 msgid "This link has been identified as potentially harmful and has been blocked."
 msgstr "此链接被识别为潜在有害并已被阻止。"
+
+msgid "Restore default settings"
+msgstr "恢复默认设置"
+
+msgid "Are you sure you want to restore all settings to their default values?"
+msgstr "你确定要恢复所有设置为默认值吗？"
