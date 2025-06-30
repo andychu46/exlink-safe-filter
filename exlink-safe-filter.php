@@ -3,7 +3,9 @@
 Plugin Name: exlink-safe-filter - External Link Security
 Plugin URI: https://github.com/andychu46/exlink-safe-filter
 Description: Advanced external link filtering with whitelist, greylist, blacklist and multiple security options.
-Version: 2.0.1
+Version: 2.0.4
+Requires at least: 5.0
+Tested up to: 6.8
 Requires PHP:   7.2
 Author: C1G
 Author URI:  https://blog.c1gstudio.com
@@ -138,7 +140,7 @@ class ExLinkFilter {
     // 停用插件
     public function deactivate() {
         flush_rewrite_rules();
-        remove_action('wp_head', [$this, 'output_custom_css']);
+        
     }
 
     // 添加重写规则
@@ -214,17 +216,10 @@ class ExLinkFilter {
     private function add_custom_css($css) {
         if (!empty($css)) {
             update_option('exlink_custom_css', wp_strip_all_tags($css));
-            add_action('wp_head', [$this, 'output_custom_css']);
         }
     }
 
-    // 输出自定义CSS
-    public function output_custom_css() {
-        $css = get_option('exlink_custom_css', '');
-        if (!empty($css)) {
-            echo '<style type="text/css">' . esc_attr($css) . '</style>';
-        }
-    }
+
 
     // 创建设置菜单
     public function create_admin_menu() {
@@ -443,7 +438,6 @@ class ExLinkFilter {
                             <select name="exlink_settings[encryption]">
                                 <option value="none" <?php selected($settings['encryption'], 'none'); ?>><?php esc_html_e('None (plain text)', 'exlink-safe-filter'); ?></option>
                                 <option value="base64" <?php selected($settings['encryption'], 'base64'); ?>><?php esc_html_e('Base64 Encoding', 'exlink-safe-filter'); ?></option>
-                                <option value="rot13" <?php selected($settings['encryption'], 'rot13'); ?>><?php esc_html_e('ROT13 Encoding', 'exlink-safe-filter'); ?></option>
                             </select>
                             <p class="description"><?php esc_html_e('Applies to redirected URLs only', 'exlink-safe-filter'); ?></p>
                         </td>
@@ -520,13 +514,16 @@ class ExLinkFilter {
                 </table>
 
             <p class="submit">
-    <input type="submit" name="reset_defaults" class="button button-secondary" value="<?php esc_html_e('Restore default settings', 'exlink-safe-filter'); ?>" onclick="return confirm('<?php _e('Are you sure you want to restore all settings to their default values?', 'exlink-safe-filter'); ?>')">
+    <input type="submit" name="reset_defaults" class="button button-secondary" value="<?php esc_html_e('Restore default settings', 'exlink-safe-filter'); ?>" onclick="return confirm('<?php esc_html_e('Are you sure you want to restore all settings to their default values?', 'exlink-safe-filter'); ?>')">
     <input type="submit" name="submit" class="button button-primary" value="<?php esc_html_e('Save Changes', 'exlink-safe-filter'); ?>">
 </p>
 </form>
         </div>
-        <script type="text/javascript">
-        jQuery(document).ready(function($) {
+<?php         
+        wp_register_script( 'exlink-admin-js', '', array("jquery"), '1.0', true );
+        wp_enqueue_script( 'exlink-admin-js' );
+        wp_add_inline_script( 'exlink-admin-js',"
+      jQuery(document).ready(function($) {
             // 中转页转码自定义文本控制
             $('#intermediate_page_transcode').change(function() {
                 if ($(this).val() === 'custom') {
@@ -545,9 +542,14 @@ class ExLinkFilter {
                 }
             });
         });
-        </script>
+        "); 
+?>
+        
+
         <?php
     }
+
+
 
     // 获取设置
     private function get_settings() {
@@ -739,9 +741,6 @@ class ExLinkFilter {
             case 'base64':
                 $encoded = rtrim(strtr(base64_encode($url), '+/', '-_'), '=');
                 break;
-            case 'rot13':
-                $encoded = str_rot13($url);
-                break;
             default:
                 $encoded = urlencode($url);
         }
@@ -757,7 +756,7 @@ class ExLinkFilter {
         if (!get_query_var('exlink_redirect')) return;
         
         $settings = $this->get_settings();
-        $url_param = isset($_GET['url']) ? sanitize_text_field($_GET['url']) : '';
+        $url_param = isset($_GET['url']) ? sanitize_text_field(wp_unslash($_GET['url'])) : '';
         $original_url = '';
         
         // 解码URL
@@ -765,9 +764,6 @@ class ExLinkFilter {
             switch ($settings['encryption']) {
                 case 'base64':
                     $original_url = base64_decode(str_pad(strtr($url_param, '-_', '+/'), strlen($url_param) % 4, '=', STR_PAD_RIGHT));
-                    break;
-                case 'rot13':
-                    $original_url = str_rot13($url_param);
                     break;
                 default:
                     $original_url = urldecode($url_param);
@@ -811,7 +807,7 @@ class ExLinkFilter {
         }
         
         // 默认重定向（灰名单情况）
-        wp_redirect(esc_url_raw($original_url));
+        wp_safe_redirect(esc_url_raw($original_url));
         exit;
     }
 
@@ -819,11 +815,11 @@ class ExLinkFilter {
     private function show_redirect_page($url, $message) {
         // 验证签名（固定签名机制）
         // 使用请求中的原始编码URL进行签名验证，确保与生成时一致
-        $encoded_url = isset($_GET['url']) ? sanitize_text_field($_GET['url']) : '';
+        $encoded_url = isset($_GET['url']) ? sanitize_text_field(wp_unslash($_GET['url'])) : '';
         $salt = wp_salt('exlink_safe_filter');
         $expected_signature = hash_hmac('sha256', $encoded_url, $salt);
-        if (empty($_GET['sig']) || !hash_equals($expected_signature, $_GET['sig'])) {
-            wp_die(__('链接验证失败，可能已被篡改。', 'exlink-safe-filter'));
+        if (empty(wp_unslash($_GET['sig'])) || !hash_equals($expected_signature, wp_unslash($_GET['sig']))) {
+            wp_die(esc_html_e('链接验证失败，可能已被篡改。', 'exlink-safe-filter'));
         }
         
         $settings = $this->get_settings();
@@ -848,7 +844,7 @@ a:hover{text-decoration:underline;}
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong{color:#292b2c;}
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
@@ -886,7 +882,7 @@ a:hover{text-decoration:underline;}
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong{color:#292b2c;}
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
@@ -895,7 +891,7 @@ strong{color:#292b2c;}
                 <p><?php echo esc_html($message); ?></p>
                 <p>Requested URL: <strong><?php echo esc_html($url); ?></strong></p>
                 <p><?php esc_html_e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
@@ -913,19 +909,18 @@ strong{color:#292b2c;}
         $settings = $this->get_settings();
         $encoded_url = esc_html($this->transcode_intermediate_domain($url));
         ?>
-            <title>Security Notice</title>
+            <title>Security Notice3</title>
             <style>
 /* Default styles */
-.exlink-redirect-container,.exlink-blocked-container{max-width:600px;margin:50px auto;padding:30px;font-family:'Segoe UI',Arial,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.1);border-radius:12px;background-color:#ffffff;}
-h2{color:#d9534f;margin-top:0;border-bottom:2px solid #f5f5f5;padding-bottom:10px;}
-p{line-height:1.6;color:#333333;}
-a{color:#0275d8;text-decoration:none;font-weight:500;}
-a:hover{text-decoration:underline;}
-.exlink-warning{padding:15px;background-color:#f8d7da;color:#721c24;border-radius:6px;margin-bottom:20px;}
-.exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
-strong{color:#292b2c;}
+.exlink-redirect-container, .exlink-blocked-container { max-width: 600px; margin: 50px auto; padding: 30px; font-family: 'Segoe UI', Arial, sans-serif; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; background-color: #ffffff; }
+h2 { color: #d9534f; margin-top: 0; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
+p { line-height: 1.6; color: #333333; }
+a { color: #0275d8; text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; } 
+.exlink-warning { padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 6px; margin-bottom: 20px; }
+.exlink-footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 0.9em; color: #666; }
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
@@ -934,7 +929,7 @@ strong{color:#292b2c;}
                 <p><?php echo esc_html($message); ?></p>
                 <p>Requested URL: <code><?php echo esc_url($encoded_url); ?></code></p>
                 <p><?php esc_html_e('This link has been disabled for security reasons.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
@@ -963,7 +958,7 @@ a:hover { text-decoration: underline; }
 .exlink-footer{margin-top:30px;padding-top:20px;border-top:1px solid #eee;text-align:center;font-size:0.9em;color:#666;}
 strong { color: #292b2c; }
 
-<?php echo get_option('exlink_custom_css', ''); ?>
+<?php echo esc_attr(get_option('exlink_custom_css', '')); ?>
 </style>
         </head>
         <body>
@@ -971,7 +966,7 @@ strong { color: #292b2c; }
                 <h2><?php esc_html_e('Security Alert', 'exlink-safe-filter'); ?></h2>
                 <div class="exlink-warning"><?php echo esc_html($message); ?></div>
                 <p><?php esc_html_e('This link has been identified as potentially harmful and has been blocked.', 'exlink-safe-filter'); ?></p>
-                <p><a href="<?php echo home_url(); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
+                <p><a href="<?php echo esc_url(home_url()); ?>"><?php esc_html_e('Return to home page', 'exlink-safe-filter'); ?></a></p>
             </div>
             <?php if ($settings['show_footer']): ?>
             <div class="exlink-footer">
@@ -985,7 +980,7 @@ strong { color: #292b2c; }
     }
 
     private function convertToHtmlEntities($url) {
-        $parsed = parse_url($url);
+        $parsed = wp_parse_url($url);
         if (empty($parsed['host'])) {
             return $url;
         }
@@ -1040,7 +1035,7 @@ strong { color: #292b2c; }
     }
 
     private function get_domain_from_url($url) {
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = wp_parse_url ($url, PHP_URL_HOST);
         return $host ? $host : '';
     }
 
@@ -1193,7 +1188,7 @@ strong { color: #292b2c; }
      * @return string 域名掩码处理后的完整URL
      */
     private function mask_url($url) {
-        $parsed = parse_url($url);
+        $parsed = wp_parse_url($url);
         if (empty($parsed['host'])) {
             return $url;
         }

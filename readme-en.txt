@@ -5,7 +5,7 @@ Donate link: https://blog.c1gstudio.com/
 Tags: external links, security, link filtering, whitelist, blacklist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.0.1
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ Key Features:
 * **Flexible Processing Options**
   - Processing time: Process when displaying (recommended) or when publishing/editing
   - Audit mode: Preserve original URL in data-original-url attribute for auditing
-  - URL encryption: Support Base64, ROT13 encryption or plain text display
+  - URL encryption: Support Base64 encryption or plain text display
   - Custom redirect slug: Defaults to /exlink-safe-redirect/
 
 * **Advanced Security Features**
@@ -75,6 +75,16 @@ Currently supports Chinese (Simplified) and English, which can be switched in "G
 In "Security Settings", set "Domain Transcode Method" to "Mask", and the system will automatically replace the middle characters of the main domain part with asterisks.
 
 == Changelog ==
+
+= 2.0.4 =
+* Enhanced security escaping for all user input/output
+
+= 2.0.3 =
+* Removed rot13 encryption method
+* Enhanced security escaping for all user input/output
+* Added Content Security Policy (CSP) protection
+* Strengthened XSS defense mechanisms
+* Optimized frontend resource loading (WP 6.3+ features)
 
 = 2.0.1 =
 * Added restore defaults feature (with confirmation dialog)

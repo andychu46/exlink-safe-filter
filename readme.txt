@@ -5,7 +5,7 @@ Donate link: https://blog.c1gstudio.com/
 Tags: external links, security, link filtering, whitelist, blacklist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.0.1
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ exlink-safe-filter是一款企业级外部链接安全管理插件，专为WordP
 * **灵活的处理选项**
   - 处理时间：显示时处理(推荐)或发布/编辑时处理
   - 审计模式：保留原始URL在data-original-url属性中，便于审计
-  - URL加密：支持Base64、ROT13加密或明文显示
+  - URL加密：支持Base64加密或明文显示
   - 自定义重定向地址：默认为/exlink-safe-redirect/
 
 * **高级安全特性**
@@ -81,6 +81,16 @@ exlink-safe-filter是一款企业级外部链接安全管理插件，专为WordP
 在"安全设置"中，将"域名转码方式"设置为"打码"，系统会自动替换域名主体部分的中间字符为星号。
 
 == 升级日志 ==
+
+= 2.0.4 =
+* 增强所有用户输入输出的安全转义处理
+
+= 2.0.3 =
+* 移除rot13加密方式
+* 增强所有用户输入输出的安全转义处理
+* 新增内容安全策略(CSP)保护
+* 强化XSS防御机制
+* 优化前端资源加载方式(WP 6.3+特性)
 
 = 2.0.1 =
 * 新增恢复默认设置功能（带二次确认对话框）
